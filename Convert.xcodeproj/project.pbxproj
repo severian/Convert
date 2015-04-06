@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A588AD01AD0913700E64315 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A588ACF1AD0913700E64315 /* Parser.swift */; };
 		1A5ED6DB1AD08C630045AC5F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5ED6DA1AD08C630045AC5F /* AppDelegate.swift */; };
 		1A5ED6DD1AD08C630045AC5F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5ED6DC1AD08C630045AC5F /* ViewController.swift */; };
 		1A5ED6E01AD08C630045AC5F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A5ED6DE1AD08C630045AC5F /* Main.storyboard */; };
@@ -26,6 +27,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1A588ACF1AD0913700E64315 /* Parser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
+		1A588AD11AD0B80C00E64315 /* Convert.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Convert.playground; sourceTree = "<group>"; };
 		1A5ED6D51AD08C630045AC5F /* Convert.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Convert.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A5ED6D91AD08C630045AC5F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1A5ED6DA1AD08C630045AC5F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -56,6 +59,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1A588ACE1AD0911B00E64315 /* Parser */ = {
+			isa = PBXGroup;
+			children = (
+				1A588ACF1AD0913700E64315 /* Parser.swift */,
+			);
+			name = Parser;
+			sourceTree = "<group>";
+		};
 		1A5ED6CC1AD08C630045AC5F = {
 			isa = PBXGroup;
 			children = (
@@ -77,12 +88,14 @@
 		1A5ED6D71AD08C630045AC5F /* Convert */ = {
 			isa = PBXGroup;
 			children = (
+				1A588ACE1AD0911B00E64315 /* Parser */,
 				1A5ED6DA1AD08C630045AC5F /* AppDelegate.swift */,
 				1A5ED6DC1AD08C630045AC5F /* ViewController.swift */,
 				1A5ED6DE1AD08C630045AC5F /* Main.storyboard */,
 				1A5ED6E11AD08C630045AC5F /* Images.xcassets */,
 				1A5ED6E31AD08C630045AC5F /* LaunchScreen.xib */,
 				1A5ED6D81AD08C630045AC5F /* Supporting Files */,
+				1A588AD11AD0B80C00E64315 /* Convert.playground */,
 			);
 			path = Convert;
 			sourceTree = "<group>";
@@ -214,6 +227,7 @@
 			files = (
 				1A5ED6DD1AD08C630045AC5F /* ViewController.swift in Sources */,
 				1A5ED6DB1AD08C630045AC5F /* AppDelegate.swift in Sources */,
+				1A588AD01AD0913700E64315 /* Parser.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -407,6 +421,7 @@
 				1A5ED6F61AD08C630045AC5F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		1A5ED6F71AD08C630045AC5F /* Build configuration list for PBXNativeTarget "ConvertTests" */ = {
 			isa = XCConfigurationList;
@@ -415,6 +430,7 @@
 				1A5ED6F91AD08C630045AC5F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
