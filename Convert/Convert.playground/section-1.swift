@@ -4,18 +4,26 @@ import Foundation
 
 struct InputState {
   let input: String
-  var pos: Int
+  let pos: String.Index
   
   func advanceBy(n: Int) -> InputState {
-    return InputState(input: input, pos: pos + n)
+    return InputState(input: input, pos: advance(pos, 1))
+  }
+  
+  func empty() -> Bool {
+    return pos >= input.endIndex
   }
   
   func first() -> Character? {
-    if pos < countElements(input) {
-      return input[advance(input.startIndex, pos)]
+    if !empty() {
+      return input[pos]
     } else {
       return nil
     }
+  }
+  
+  func consumedFrom(other: InputState) -> String {
+    return input[pos..<other.pos]
   }
 }
 
@@ -49,7 +57,7 @@ func >>><A,B>(parser: Parser<A>, f: A -> Parser<B>) -> Parser<B> {
 }
 
 func run<A>(parser: Parser<A>, input: String) -> A? {
-  return parser.parse(InputState(input: input, pos: 0))?.val
+  return parser.parse(InputState(input: input, pos: input.startIndex))?.val
 }
 
 func always<A>(val: A) -> Parser<A> {
@@ -119,10 +127,9 @@ func many<A>(parser: Parser<A>) -> Parser<[A]> {
 
 func many1<A>(parser: Parser<A>) -> Parser<[A]> {
   return parser >>> { a in
-    return many(parser) >>> { rest in
-      return always([a] + rest)
-    }
-  }
+  return many(parser) >>> { rest in
+    return always([a] + rest)
+  }}
 }
 
 func charSet(cs: NSCharacterSet) -> Parser<Character> {
@@ -133,6 +140,12 @@ func charSet(cs: NSCharacterSet) -> Parser<Character> {
 
 func letter() -> Parser<Character> {
   return charSet(NSCharacterSet.letterCharacterSet())
+}
+
+func word() -> Parser<String> {
+  return many1(letter()) >>> { letters in
+    return always(String(letters))
+  }
 }
 
 func digit() -> Parser<Character> {
@@ -189,40 +202,124 @@ func number() -> Parser<Double> {
   return choice(decimal(), fraction())
 }
 
-let a = charSet(NSCharacterSet.uppercaseLetterCharacterSet())
+run(number(), "5001.2")
 
-let c:Parser<String> = a >>> { upper in
-  let lower = String(upper).lowercaseString
-  return many(char(lower[lower.startIndex])) >>> { letters in
-    return always("Got \(countElements(letters) + 1) \(upper)'s")
+struct TrieEdge {
+  let edge: Character
+  let node: TrieNode
+}
+
+class TrieNode {
+  var terminal: Bool = false
+  var children = [TrieEdge]()
+  
+  func childForChar(c: Character) -> TrieNode? {
+    for child in children {
+      if c == child.edge {
+        return child.node
+      }
+    }
+    return nil
+  }
+  
+  func find(state: InputState) -> InputState? {
+    var node = self
+    var s = state
+    while let c = s.first() {
+      if let child = node.childForChar(c) {
+        node = child
+        s = s.advanceBy(1)
+      } else {
+        break
+      }
+    }
+    
+    return node.terminal ? s : nil
+  }
+  
+  func insert(s: String) {
+    var node = self
+    var i = s.startIndex
+    
+    while i < s.endIndex {
+      if let child = node.childForChar(s[i]) {
+        node = child
+        i = advance(i, 1)
+      } else {
+        break
+      }
+    }
+    
+    while i < s.endIndex {
+      let newNode = TrieNode()
+      node.children.append(TrieEdge(edge: s[i], node: newNode))
+      node = newNode
+      i = advance(i, 1)
+    }
+    
+    node.terminal = true
   }
 }
 
-run(c, "Z")
+func makeTrie(strings: [String]) -> TrieNode {
+  let t = TrieNode()
+  for s in strings {
+    t.insert(s)
+  }
+  return t
+}
 
-//func mapper<P1: Parser where P1.T == Character>(c: Character) -> P1 {
-//  if (c == "A") {
-//    return Char(c: "a") as P1
-//  } else {
-//    return Char(c: "b") as P1
-//  }
-//}
-//
-//if let z = b.parse(InputState(input: "Aa", pos: 0)) {
-//  print(z)
-//} else {
-//  print("NOPE!")
-//}
+func matchTrie(trie: TrieNode) -> Parser<String> {
+  return Parser<String> { state in
+    if let matchedState = trie.find(state) {
+      return Result(state: matchedState, val: state.consumedFrom(matchedState))
+    } else {
+      return nil
+    }
+  }
+}
 
+let siPrefixes = makeTrie([
+  "zetta",
+  "exa",
+  "peta",
+  "tera",
+  "giga",
+  "mega",
+  "kilo",
+  "hecto",
+  "deca",
+  "deci",
+  "centi",
+  "milli",
+  "micro",
+  "nano",
+  "pico",
+  "femto",
+  "atto",
+  "zepto",
+  "yocto"
+])
 
-//struct Many<A, P1: Parser where P1.T == A>: Parser {
-//  typealias T = [A]
-//
-//  let parser: P1
-//
-//  func parse(state: InputState) -> Result<T>? {
-//    let m = FlatMap(parser: parser, f: { a in return FlatMap(parser: Many(self.parser), f: { b in return b.insert(a) }) })
-//  }
-//}
+let siUnits = makeTrie([
+  "metre",
+  "gram",
+  "second",
+  "ampere",
+  "kelvin",
+  "candela",
+  "mole"
+])
 
+struct SIUnit {
+  let prefix: String
+  let unit: String
+}
 
+let siUnitParser: Parser<SIUnit> =
+  choice(matchTrie(siPrefixes), always("")) >>> { prefix in
+  matchTrie(siUnits) >>> { unit in
+    always(SIUnit(prefix: prefix, unit: unit))
+  }}
+
+run(siUnitParser, "kilogram")
