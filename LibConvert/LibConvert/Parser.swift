@@ -37,6 +37,14 @@ public func >>><A,B>(parser: Parser<A>, f: A -> Parser<B>) -> Parser<B> {
   return parser.flatMap(f)
 }
 
+infix operator >>! { associativity left }
+public func >>!<A,B>(parser: Parser<A>, ignore: Parser<B>) -> Parser<A> {
+  return parser >>> { val in
+  return ignore >>> { _ in
+    return always(val)
+  }}
+}
+
 public func run<A>(parser: Parser<A>, input: String) -> Result<A>? {
   return parser.parse(InputState(input: input, pos: input.startIndex))
 }

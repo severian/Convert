@@ -73,23 +73,19 @@ struct UnitConversion {
   let to: Unit
 }
 
-let unit: Parser<Unit> = matchTrie(trie) >>> { unit in return option(char("s")) >>> { _ in return always(unit) } }
+let unit: Parser<Unit> = matchTrie(trie) >>! option(char("s"))
 let ignore = many(choice(char(" "), char(".")))
 let preposition = option(choice(string("to"), string("=")))
 
 let conversion: Parser<UnitConversion> =
-  number() >>> { quantity in
-  return ignore >>> { _ in
-  return unit >>> { from in
-  return ignore >>> { _ in
-  return preposition >>> { _ in
-  return ignore >>> { _ in
+  number() >>! ignore >>> { quantity in
+  return unit >>! ignore >>! preposition >>! ignore >>> { from in
   return unit >>> { to in
     return always(UnitConversion(quantity: quantity, from: from, to: to))
-  }}}}}}}
+  }}}
 
 
-if let c = run(conversion, "30\" to ft")?.val {
+if let c = run(conversion, "30 miles to ft")?.val {
   "Quantity: \(c.quantity)"
   "From: \(c.from.name)"
   "To: \(c.to.name)"
