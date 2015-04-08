@@ -13,7 +13,7 @@ struct Result<A> {
   let val: A
 }
 
-struct Parser<A> {
+public struct Parser<A> {
   let parser: InputState -> Result<A>?
   
   func parse(state: InputState) -> Result<A>? {
@@ -33,27 +33,27 @@ struct Parser<A> {
 }
 
 infix operator >>> { associativity left }
-func >>><A,B>(parser: Parser<A>, f: A -> Parser<B>) -> Parser<B> {
+public func >>><A,B>(parser: Parser<A>, f: A -> Parser<B>) -> Parser<B> {
   return parser.flatMap(f)
 }
 
-func run<A>(parser: Parser<A>, input: String) -> A? {
+public func run<A>(parser: Parser<A>, input: String) -> A? {
   return parser.parse(InputState(input: input, pos: input.startIndex))?.val
 }
 
-func always<A>(val: A) -> Parser<A> {
+public func always<A>(val: A) -> Parser<A> {
   return Parser<A>() { state in
     return Result(state: state, val: val)
   }
 }
 
-func never<A>() -> Parser<A> {
+public func never<A>() -> Parser<A> {
   return Parser<A>() { state in
     return nil
   }
 }
 
-func maybe<A>(val: A?) -> Parser<A> {
+public func maybe<A>(val: A?) -> Parser<A> {
   if let v = val {
     return always(v)
   } else {
@@ -61,7 +61,7 @@ func maybe<A>(val: A?) -> Parser<A> {
   }
 }
 
-func char(c: Character) -> Parser<Character> {
+public func char(c: Character) -> Parser<Character> {
   return Parser<Character>() { state in
     if c == state.first() {
       //      print("returning " + [c])
@@ -72,7 +72,7 @@ func char(c: Character) -> Parser<Character> {
   }
 }
 
-func choice<A>(parsers: Parser<A>...) -> Parser<A> {
+public func choice<A>(parsers: Parser<A>...) -> Parser<A> {
   return Parser<A>() { state in
     for parser in parsers {
       if let r = parser.parse(state) {
@@ -83,7 +83,7 @@ func choice<A>(parsers: Parser<A>...) -> Parser<A> {
   }
 }
 
-func token(consume: Character -> Bool) -> Parser<Character> {
+public func token(consume: Character -> Bool) -> Parser<Character> {
   return Parser<Character>() { state in
     if let c = state.first() {
       if consume(c) {
@@ -94,7 +94,7 @@ func token(consume: Character -> Bool) -> Parser<Character> {
   }
 }
 
-func many<A>(parser: Parser<A>) -> Parser<[A]> {
+public func many<A>(parser: Parser<A>) -> Parser<[A]> {
   return Parser<[A]> { state in
     var a = [A]()
     var s = state
@@ -106,51 +106,51 @@ func many<A>(parser: Parser<A>) -> Parser<[A]> {
   }
 }
 
-func many1<A>(parser: Parser<A>) -> Parser<[A]> {
+public func many1<A>(parser: Parser<A>) -> Parser<[A]> {
   return parser >>> { a in
     return many(parser) >>> { rest in
       return always([a] + rest)
     }}
 }
 
-func charSet(cs: NSCharacterSet) -> Parser<Character> {
+public func charSet(cs: NSCharacterSet) -> Parser<Character> {
   return token() { c in
     return cs.characterIsMember(String(c).utf16[0])
   }
 }
 
-func letter() -> Parser<Character> {
+public func letter() -> Parser<Character> {
   return charSet(NSCharacterSet.letterCharacterSet())
 }
 
-func word() -> Parser<String> {
+public func word() -> Parser<String> {
   return many1(letter()) >>> { letters in
     return always(String(letters))
   }
 }
 
-func digit() -> Parser<Character> {
+public func digit() -> Parser<Character> {
   return charSet(NSCharacterSet.decimalDigitCharacterSet())
 }
 
-func positiveInteger() -> Parser<Int> {
+public func positiveInteger() -> Parser<Int> {
   return many1(digit()) >>> { digits in
     return always(String(digits).toInt()!)
   }
 }
 
-func negativeInteger() -> Parser<Int> {
+public func negativeInteger() -> Parser<Int> {
   return char("-") >>> { _ in
     return positiveInteger() >>> { i in
       return always(i * -1)
     }}
 }
 
-func integer() -> Parser<Int> {
+public func integer() -> Parser<Int> {
   return choice(positiveInteger(), negativeInteger())
 }
 
-func fraction() -> Parser<Double> {
+public func fraction() -> Parser<Double> {
   return integer() >>> { numerator in
     return char("/") >>> { _ in
       return integer() >>> { denominator in
@@ -162,7 +162,7 @@ func fraction() -> Parser<Double> {
       }}}
 }
 
-func decimal() -> Parser<Double> {
+public func decimal() -> Parser<Double> {
   let dec: Parser<Double> =
   choice(integer(), always(0)) >>> { intDigits in
     return char(".") >>> { _ in
@@ -173,11 +173,11 @@ func decimal() -> Parser<Double> {
   return choice(dec, integer() >>> { n in return always(Double(n)) })
 }
 
-func number() -> Parser<Double> {
+public func number() -> Parser<Double> {
   return choice(decimal(), fraction())
 }
 
-func matchTrie(trie: Trie) -> Parser<String> {
+public func matchTrie(trie: Trie) -> Parser<String> {
   return Parser<String> { state in
     if let matchedState = trie.find(state) {
       return Result(state: matchedState, val: state.consumedFrom(matchedState))

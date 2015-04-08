@@ -13,7 +13,7 @@ struct TrieEdge {
   let node: TrieNode
 }
 
-class TrieNode {
+public class TrieNode {
   var terminal: Bool = false
   var children = [TrieEdge]()
   
@@ -73,4 +73,4 @@ class TrieNode {
   }
 }
 
-typealias Trie = TrieNode
+public typealias Trie = TrieNode
