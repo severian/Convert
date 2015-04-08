@@ -8,24 +8,18 @@
 
 import Foundation
 
-struct TrieEdge {
+struct TrieEdge<T> {
   let edge: Character
-  let node: TrieNode
+  let node: Trie<T>
 }
 
-public class TrieNode {
-  var terminal: Bool = false
-  var children = [TrieEdge]()
+public class Trie<T> {
+  var value: T?
+  var children = [TrieEdge<T>]()
   
-  class func fromStrings(strings: [String]) -> TrieNode {
-    let t = TrieNode()
-    for s in strings {
-      t.insert(s)
-    }
-    return t
-  }
+  public init() { }
   
-  private func childForChar(c: Character) -> TrieNode? {
+  func childForChar(c: Character) -> Trie? {
     for child in children {
       if c == child.edge {
         return child.node
@@ -34,7 +28,7 @@ public class TrieNode {
     return nil
   }
   
-  func find(state: InputState) -> InputState? {
+  public func get(state: InputState) -> (T, InputState)? {
     var node = self
     var s = state
     while let c = s.first() {
@@ -46,15 +40,19 @@ public class TrieNode {
       }
     }
     
-    return node.terminal ? s : nil
+    if let v = node.value {
+      return (v, s)
+    } else {
+      return nil
+    }
   }
   
-  func insert(s: String) {
+  public func put(key: String, val: T) {
     var node = self
-    var i = s.startIndex
+    var i = key.startIndex
     
-    while i < s.endIndex {
-      if let child = node.childForChar(s[i]) {
+    while i < key.endIndex {
+      if let child = node.childForChar(key[i]) {
         node = child
         i = advance(i, 1)
       } else {
@@ -62,15 +60,14 @@ public class TrieNode {
       }
     }
     
-    while i < s.endIndex {
-      let newNode = TrieNode()
-      node.children.append(TrieEdge(edge: s[i], node: newNode))
+    while i < key.endIndex {
+      let newNode = Trie()
+      node.children.append(TrieEdge(edge: key[i], node: newNode))
       node = newNode
       i = advance(i, 1)
     }
     
-    node.terminal = true
+    node.value = val
   }
 }
 
-public typealias Trie = TrieNode

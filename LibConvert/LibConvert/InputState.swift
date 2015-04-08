@@ -8,12 +8,12 @@
 
 import Foundation
 
-struct InputState {
+public struct InputState {
   let input: String
   let pos: String.Index
   
   func advanceBy(n: Int) -> InputState {
-    return InputState(input: input, pos: advance(pos, 1))
+    return InputState(input: input, pos: advance(pos, n))
   }
   
   func empty() -> Bool {
@@ -30,5 +30,13 @@ struct InputState {
   
   func consumedFrom(other: InputState) -> String {
     return input[pos..<other.pos]
+  }
+  
+  func startsWith(str: String) -> Bool {
+    if let r = input.rangeOfString(str, options: .allZeros, range: nil, locale: nil) {
+      return r.startIndex == pos
+    } else {
+      return false
+    }
   }
 }

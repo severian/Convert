@@ -8,9 +8,9 @@
 
 import Foundation
 
-struct Result<A> {
-  let state: InputState
-  let val: A
+public struct Result<A> {
+  public let state: InputState
+  public let val: A
 }
 
 public struct Parser<A> {
@@ -37,8 +37,8 @@ public func >>><A,B>(parser: Parser<A>, f: A -> Parser<B>) -> Parser<B> {
   return parser.flatMap(f)
 }
 
-public func run<A>(parser: Parser<A>, input: String) -> A? {
-  return parser.parse(InputState(input: input, pos: input.startIndex))?.val
+public func run<A>(parser: Parser<A>, input: String) -> Result<A>? {
+  return parser.parse(InputState(input: input, pos: input.startIndex))
 }
 
 public func always<A>(val: A) -> Parser<A> {
@@ -64,10 +64,19 @@ public func maybe<A>(val: A?) -> Parser<A> {
 public func char(c: Character) -> Parser<Character> {
   return Parser<Character>() { state in
     if c == state.first() {
-      //      print("returning " + [c])
       return Result(state: state.advanceBy(1), val: c)
     } else {
       return nil;
+    }
+  }
+}
+
+public func string(str: String) -> Parser<String> {
+  return Parser<String>() { state in
+    if state.startsWith(str) {
+      return Result(state: state.advanceBy(countElements(str)), val: str)
+    } else {
+      return nil
     }
   }
 }
@@ -111,6 +120,16 @@ public func many1<A>(parser: Parser<A>) -> Parser<[A]> {
     return many(parser) >>> { rest in
       return always([a] + rest)
     }}
+}
+
+public func option<A>(parser: Parser<A>) -> Parser<A?> {
+  return Parser<A?> { state in
+    if let r = parser.parse(state) {
+      return Result(state: r.state, val: r.val)
+    } else {
+      return Result(state: state, val: nil)
+    }
+  }
 }
 
 public func charSet(cs: NSCharacterSet) -> Parser<Character> {
@@ -174,60 +193,16 @@ public func decimal() -> Parser<Double> {
 }
 
 public func number() -> Parser<Double> {
-  return choice(decimal(), fraction())
+  return choice(fraction(), decimal())
 }
 
-public func matchTrie(trie: Trie) -> Parser<String> {
-  return Parser<String> { state in
-    if let matchedState = trie.find(state) {
-      return Result(state: matchedState, val: state.consumedFrom(matchedState))
+public func matchTrie<A>(trie: Trie<A>) -> Parser<A> {
+  return Parser<A> { state in
+    if let (val, matchedState) = trie.get(state) {
+      return Result(state: matchedState, val: val)
     } else {
       return nil
     }
   }
 }
 
-//let siPrefixes = makeTrie([
-//  "zetta",
-//  "exa",
-//  "peta",
-//  "tera",
-//  "giga",
-//  "mega",
-//  "kilo",
-//  "hecto",
-//  "deca",
-//  "deci",
-//  "centi",
-//  "milli",
-//  "micro",
-//  "nano",
-//  "pico",
-//  "femto",
-//  "atto",
-//  "zepto",
-//  "yocto"
-//  ])
-//
-//let siUnits = makeTrie([
-//  "metre",
-//  "gram",
-//  "second",
-//  "ampere",
-//  "kelvin",
-//  "candela",
-//  "mole"
-//  ])
-//
-//struct SIUnit {
-//  let prefix: String
-//  let unit: String
-//}
-//
-//let siUnitParser: Parser<SIUnit> =
-//  choice(matchTrie(siPrefixes), always("")) >>> { prefix in
-//  matchTrie(siUnits) >>> { unit in
-//    always(SIUnit(prefix: prefix, unit: unit))
-//  }}
-//
-//run(siUnitParser, "kilogram")
