@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A525F3A1AD4C0A600ED6871 /* Trie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A525F391AD4C0A600ED6871 /* Trie.swift */; };
+		1A525F3D1AD4C0E200ED6871 /* InputState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A525F3C1AD4C0E200ED6871 /* InputState.swift */; };
 		1A588AD01AD0913700E64315 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A588ACF1AD0913700E64315 /* Parser.swift */; };
 		1A5ED6DB1AD08C630045AC5F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5ED6DA1AD08C630045AC5F /* AppDelegate.swift */; };
 		1A5ED6DD1AD08C630045AC5F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5ED6DC1AD08C630045AC5F /* ViewController.swift */; };
@@ -27,6 +29,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1A525F391AD4C0A600ED6871 /* Trie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Trie.swift; sourceTree = "<group>"; };
+		1A525F3C1AD4C0E200ED6871 /* InputState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputState.swift; sourceTree = "<group>"; };
 		1A588ACF1AD0913700E64315 /* Parser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
 		1A588AD11AD0B80C00E64315 /* Convert.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Convert.playground; sourceTree = "<group>"; };
 		1A5ED6D51AD08C630045AC5F /* Convert.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Convert.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -59,12 +63,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1A588ACE1AD0911B00E64315 /* Parser */ = {
+		1A588ACE1AD0911B00E64315 /* Library */ = {
 			isa = PBXGroup;
 			children = (
 				1A588ACF1AD0913700E64315 /* Parser.swift */,
+				1A525F391AD4C0A600ED6871 /* Trie.swift */,
+				1A525F3C1AD4C0E200ED6871 /* InputState.swift */,
 			);
-			name = Parser;
+			name = Library;
 			sourceTree = "<group>";
 		};
 		1A5ED6CC1AD08C630045AC5F = {
@@ -88,7 +94,7 @@
 		1A5ED6D71AD08C630045AC5F /* Convert */ = {
 			isa = PBXGroup;
 			children = (
-				1A588ACE1AD0911B00E64315 /* Parser */,
+				1A588ACE1AD0911B00E64315 /* Library */,
 				1A5ED6DA1AD08C630045AC5F /* AppDelegate.swift */,
 				1A5ED6DC1AD08C630045AC5F /* ViewController.swift */,
 				1A5ED6DE1AD08C630045AC5F /* Main.storyboard */,
@@ -226,6 +232,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A5ED6DD1AD08C630045AC5F /* ViewController.swift in Sources */,
+				1A525F3A1AD4C0A600ED6871 /* Trie.swift in Sources */,
+				1A525F3D1AD4C0E200ED6871 /* InputState.swift in Sources */,
 				1A5ED6DB1AD08C630045AC5F /* AppDelegate.swift in Sources */,
 				1A588AD01AD0913700E64315 /* Parser.swift in Sources */,
 			);
