@@ -88,7 +88,7 @@ let conversion: Parser<UnitConversion> =
     return always(UnitConversion(quantity: quantity, from: from, to: to))
   }}}
 
-if let c = run(conversion, "50 centimeters to miles")?.val {
+if let c = run(conversion, "10 inch yards")?.val {
   "\(c.quantity) \(c.from.name) = \(c.convert()) \(c.to.name)"
 }
 

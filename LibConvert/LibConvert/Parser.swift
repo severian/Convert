@@ -82,7 +82,7 @@ public func char(c: Character) -> Parser<Character> {
 public func string(str: String) -> Parser<String> {
   return Parser<String>() { state in
     if state.startsWith(str) {
-      return Result(state: state.advanceBy(countElements(str)), val: str)
+      return Result(state: state.advanceBy(count(str)), val: str)
     } else {
       return nil
     }
@@ -142,7 +142,8 @@ public func option<A>(parser: Parser<A>) -> Parser<A?> {
 
 public func charSet(cs: NSCharacterSet) -> Parser<Character> {
   return token() { c in
-    return cs.characterIsMember(String(c).utf16[0])
+    let str = String(c)
+    return cs.characterIsMember(str.utf16[str.utf16.startIndex])
   }
 }
 
