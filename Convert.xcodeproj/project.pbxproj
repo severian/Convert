@@ -10,10 +10,10 @@
 		1A01A1181AD517FD001DDE00 /* LibConvert.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A01A1171AD517FD001DDE00 /* LibConvert.framework */; };
 		1A5ED6DB1AD08C630045AC5F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5ED6DA1AD08C630045AC5F /* AppDelegate.swift */; };
 		1A5ED6DD1AD08C630045AC5F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5ED6DC1AD08C630045AC5F /* ViewController.swift */; };
-		1A5ED6E01AD08C630045AC5F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A5ED6DE1AD08C630045AC5F /* Main.storyboard */; };
 		1A5ED6E21AD08C630045AC5F /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A5ED6E11AD08C630045AC5F /* Images.xcassets */; };
 		1A5ED6E51AD08C630045AC5F /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A5ED6E31AD08C630045AC5F /* LaunchScreen.xib */; };
 		1A5ED6F11AD08C630045AC5F /* ConvertTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5ED6F01AD08C630045AC5F /* ConvertTests.swift */; };
+		1AAB89021ADAECDF00A1A41A /* AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB89011ADAECDF00A1A41A /* AppStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,12 +32,12 @@
 		1A5ED6D91AD08C630045AC5F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1A5ED6DA1AD08C630045AC5F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1A5ED6DC1AD08C630045AC5F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		1A5ED6DF1AD08C630045AC5F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		1A5ED6E11AD08C630045AC5F /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		1A5ED6E41AD08C630045AC5F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		1A5ED6EA1AD08C630045AC5F /* ConvertTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ConvertTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A5ED6EF1AD08C630045AC5F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1A5ED6F01AD08C630045AC5F /* ConvertTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConvertTests.swift; sourceTree = "<group>"; };
+		1AAB89011ADAECDF00A1A41A /* AppStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,7 +91,7 @@
 			children = (
 				1A5ED6DA1AD08C630045AC5F /* AppDelegate.swift */,
 				1A5ED6DC1AD08C630045AC5F /* ViewController.swift */,
-				1A5ED6DE1AD08C630045AC5F /* Main.storyboard */,
+				1AAB89011ADAECDF00A1A41A /* AppStore.swift */,
 				1A5ED6E11AD08C630045AC5F /* Images.xcassets */,
 				1A5ED6E31AD08C630045AC5F /* LaunchScreen.xib */,
 				1A5ED6D81AD08C630045AC5F /* Supporting Files */,
@@ -204,7 +204,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1A5ED6E01AD08C630045AC5F /* Main.storyboard in Resources */,
 				1A5ED6E51AD08C630045AC5F /* LaunchScreen.xib in Resources */,
 				1A5ED6E21AD08C630045AC5F /* Images.xcassets in Resources */,
 			);
@@ -224,6 +223,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1AAB89021ADAECDF00A1A41A /* AppStore.swift in Sources */,
 				1A5ED6DD1AD08C630045AC5F /* ViewController.swift in Sources */,
 				1A5ED6DB1AD08C630045AC5F /* AppDelegate.swift in Sources */,
 			);
@@ -248,14 +248,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		1A5ED6DE1AD08C630045AC5F /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1A5ED6DF1AD08C630045AC5F /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		1A5ED6E31AD08C630045AC5F /* LaunchScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
