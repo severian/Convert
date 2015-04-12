@@ -75,8 +75,9 @@ let length = makeUnits(
 let weight = makeUnits(
   Unit(name: "gram", factor: 1.0, alternateNames: ["g"]),
   [
-    Unit(name: "pound", factor: 453.59237, alternateNames: ["pounds", "lb", "lbs"]),
-    Unit(name: "ton", factor: 9071847.4, alternateNames: ["tons"])
+    Unit(name: "pound", factor: 453.59237, alternateNames: ["pound", "lb"]),
+    Unit(name: "ton", factor: 9071847.4, alternateNames: ["tonne"]),
+    Unit(name: "ounce", factor: 28.349523125, alternateNames: ["oz"])
   ]
 )
 
