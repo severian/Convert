@@ -8,9 +8,14 @@
 
 import Foundation
 
+public enum UnitType {
+  case Length
+  case Weight
+}
 
 public struct Unit {
   public let name: String
+  public let unitType: UnitType
   public let factor: Double
   public let alternateNames: [String]
 }
@@ -49,35 +54,50 @@ let siPrefixes = [
   SiPrefix(name: "yocto", factor: pow(10, -24))
 ]
 
-func makeUnits(baseSIUnit: Unit, otherUnits: [Unit]) -> [Unit] {
-  var units = otherUnits
-  units.append(baseSIUnit)
+struct UnitSpec {
+  let name: String
+  let factor: Double
+  let alternateNames: [String]
+}
+
+func unitFromSpec(spec: UnitSpec, unitType: UnitType) -> Unit {
+  return Unit(name: spec.name, unitType: unitType, factor: spec.factor, alternateNames: spec.alternateNames)
+}
+
+func unitsFromSpecs(unitType: UnitType, baseSIUnit: UnitSpec, otherUnits: [UnitSpec]) -> [Unit] {
+  var units = [Unit]()
+  units.append(unitFromSpec(baseSIUnit, unitType))
   for prefix in siPrefixes {
-    units.append(Unit(name: prefix.name + baseSIUnit.name, factor: prefix.factor, alternateNames: []))
+    let prefixSpec = UnitSpec(name: prefix.name + baseSIUnit.name, factor: prefix.factor, alternateNames: [])
+    units.append(unitFromSpec(prefixSpec, unitType))
+  }
+  for unit in otherUnits {
+    units.append(unitFromSpec(unit, unitType))
   }
   return units
 }
 
-
-let length = makeUnits(
-  Unit(name: "meter", factor: 1.0, alternateNames: ["m"]),
+let length = unitsFromSpecs(
+  .Length,
+  UnitSpec(name: "meter", factor: 1.0, alternateNames: ["m"]),
   [
-    Unit(name: "thou", factor: 2.54e-5, alternateNames: ["mil"]),
-    Unit(name: "inch", factor: 0.0254, alternateNames: ["inches", "in", "\""]),
-    Unit(name: "yard", factor: 0.9144, alternateNames: []),
-    Unit(name: "foot", factor: 0.3048, alternateNames: ["feet", "ft", "'"]),
-    Unit(name: "mile", factor: 1609.344, alternateNames: []),
-    Unit(name: "light year", factor: 9.4605284e15, alternateNames: ["light-year", "lightyear", "ly", "l.y."]),
-    Unit(name: "parsec", factor: 3.08567758e16, alternateNames: [])
+    UnitSpec(name: "thou", factor: 2.54e-5, alternateNames: ["mil"]),
+    UnitSpec(name: "inch", factor: 0.0254, alternateNames: ["inches", "in", "\""]),
+    UnitSpec(name: "yard", factor: 0.9144, alternateNames: []),
+    UnitSpec(name: "foot", factor: 0.3048, alternateNames: ["feet", "ft", "'"]),
+    UnitSpec(name: "mile", factor: 1609.344, alternateNames: []),
+    UnitSpec(name: "light year", factor: 9.4605284e15, alternateNames: ["light-year", "lightyear", "ly", "l.y."]),
+    UnitSpec(name: "parsec", factor: 3.08567758e16, alternateNames: [])
   ]
 )
 
-let weight = makeUnits(
-  Unit(name: "gram", factor: 1.0, alternateNames: ["g"]),
+let weight = unitsFromSpecs(
+  .Weight,
+  UnitSpec(name: "gram", factor: 1.0, alternateNames: ["g"]),
   [
-    Unit(name: "pound", factor: 453.59237, alternateNames: ["pound", "lb"]),
-    Unit(name: "ton", factor: 9071847.4, alternateNames: ["tonne"]),
-    Unit(name: "ounce", factor: 28.349523125, alternateNames: ["oz"])
+    UnitSpec(name: "pound", factor: 453.59237, alternateNames: ["pound", "lb"]),
+    UnitSpec(name: "ton", factor: 9071847.4, alternateNames: ["tonne"]),
+    UnitSpec(name: "ounce", factor: 28.349523125, alternateNames: ["oz"])
   ]
 )
 

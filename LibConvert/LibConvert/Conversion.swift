@@ -15,6 +15,10 @@ public struct UnitConversion {
   public func convert() -> Double {
     return (from.unit.factor / to.factor) * from.value
   }
+  
+  public func isValid() -> Bool {
+    return from.unit.unitType == to.unitType
+  }
 }
 
 public func conversionParser() -> Parser<UnitConversion> {
