@@ -47,6 +47,10 @@ public class Trie<T> {
     }
   }
   
+  public func get(val: String) -> T? {
+    return get(InputState(input: val, pos: val.startIndex)).map { $0.0 }
+  }
+  
   public func put(key: String, val: T) {
     var node = self
     var i = key.startIndex
@@ -68,6 +72,16 @@ public class Trie<T> {
     }
     
     node.value = val
+  }
+}
+
+public func matchTrie<A>(trie: Trie<A>) -> Parser<A> {
+  return Parser<A> { state in
+    if let (val, matchedState) = trie.get(state) {
+      return Result(state: matchedState, val: val)
+    } else {
+      return nil
+    }
   }
 }
 

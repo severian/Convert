@@ -13,6 +13,8 @@
 		1A01A1141AD517E9001DDE00 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A01A1111AD517E9001DDE00 /* Parser.swift */; };
 		1A01A1151AD517E9001DDE00 /* Trie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A01A1121AD517E9001DDE00 /* Trie.swift */; };
 		1A01A1161AD517E9001DDE00 /* InputState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A01A1131AD517E9001DDE00 /* InputState.swift */; };
+		1A7EC7C41ADA2E920008C1CB /* Unit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A7EC7C31ADA2E920008C1CB /* Unit.swift */; };
+		1A7EC7C61ADA36790008C1CB /* Conversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A7EC7C51ADA36790008C1CB /* Conversion.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,6 +37,8 @@
 		1A01A1111AD517E9001DDE00 /* Parser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
 		1A01A1121AD517E9001DDE00 /* Trie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Trie.swift; sourceTree = "<group>"; };
 		1A01A1131AD517E9001DDE00 /* InputState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputState.swift; sourceTree = "<group>"; };
+		1A7EC7C31ADA2E920008C1CB /* Unit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Unit.swift; sourceTree = "<group>"; };
+		1A7EC7C51ADA36790008C1CB /* Conversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Conversion.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +85,8 @@
 				1A01A1111AD517E9001DDE00 /* Parser.swift */,
 				1A01A1121AD517E9001DDE00 /* Trie.swift */,
 				1A01A1131AD517E9001DDE00 /* InputState.swift */,
+				1A7EC7C31ADA2E920008C1CB /* Unit.swift */,
+				1A7EC7C51ADA36790008C1CB /* Conversion.swift */,
 				1A01A0F81AD517D7001DDE00 /* Supporting Files */,
 			);
 			path = LibConvert;
@@ -219,6 +225,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A01A1141AD517E9001DDE00 /* Parser.swift in Sources */,
+				1A7EC7C61ADA36790008C1CB /* Conversion.swift in Sources */,
+				1A7EC7C41ADA2E920008C1CB /* Unit.swift in Sources */,
 				1A01A1161AD517E9001DDE00 /* InputState.swift in Sources */,
 				1A01A1151AD517E9001DDE00 /* Trie.swift in Sources */,
 			);
@@ -407,6 +415,7 @@
 				1A01A10D1AD517D7001DDE00 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		1A01A10E1AD517D7001DDE00 /* Build configuration list for PBXNativeTarget "LibConvertTests" */ = {
 			isa = XCConfigurationList;
@@ -415,6 +424,7 @@
 				1A01A1101AD517D7001DDE00 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

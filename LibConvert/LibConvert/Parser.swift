@@ -157,6 +157,10 @@ public func word() -> Parser<String> {
   }
 }
 
+public func whitespace() -> Parser<Character> {
+  return charSet(NSCharacterSet.whitespaceCharacterSet())
+}
+
 public func digit() -> Parser<Character> {
   return charSet(NSCharacterSet.decimalDigitCharacterSet())
 }
@@ -180,23 +184,23 @@ public func integer() -> Parser<Int> {
 
 public func fraction() -> Parser<Double> {
   return integer() >>> { numerator in
-    return char("/") >>> { _ in
-      return integer() >>> { denominator in
-        if (denominator != 0) {
-          return always(Double(numerator) / Double(denominator))
-        } else {
-          return never()
-        }
-      }}}
+  return char("/") >>> { _ in
+  return integer() >>> { denominator in
+    if (denominator != 0) {
+      return always(Double(numerator) / Double(denominator))
+    } else {
+      return never()
+    }
+  }}}
 }
 
 public func decimal() -> Parser<Double> {
   let dec: Parser<Double> =
   choice(integer(), always(0)) >>> { intDigits in
-    return char(".") >>> { _ in
-      return positiveInteger() >>> { decDigits in
-        return always(("\(intDigits).\(decDigits)" as NSString).doubleValue)
-      }}}
+  return char(".") >>> { _ in
+  return positiveInteger() >>> { decDigits in
+    return always(("\(intDigits).\(decDigits)" as NSString).doubleValue)
+  }}}
   
   return choice(dec, integer() >>> { n in return always(Double(n)) })
 }
@@ -205,13 +209,10 @@ public func number() -> Parser<Double> {
   return choice(fraction(), decimal())
 }
 
-public func matchTrie<A>(trie: Trie<A>) -> Parser<A> {
-  return Parser<A> { state in
-    if let (val, matchedState) = trie.get(state) {
-      return Result(state: matchedState, val: val)
-    } else {
-      return nil
-    }
-  }
+public func consumeTrailing<A,B>(parser: Parser<A>, consume: Parser<B>) -> Parser<A> {
+  return parser >>> { a in
+  return consume >>> { _ in
+    return always(a)
+  }}
 }
 
