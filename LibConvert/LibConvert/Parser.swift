@@ -61,11 +61,13 @@ public func never<A>() -> Parser<A> {
   }
 }
 
-public func maybe<A>(val: A?) -> Parser<A> {
-  if let v = val {
-    return always(v)
-  } else {
-    return never()
+public func maybe<A>(parser: Parser<A>) -> Parser<A?> {
+  return Parser<A?> { state in
+    if let r = parser.parse(state) {
+      return Result(state: r.state, val: r.val)
+    } else {
+      return Result(state: state, val: nil)
+    }
   }
 }
 
@@ -128,16 +130,6 @@ public func many1<A>(parser: Parser<A>) -> Parser<[A]> {
     return many(parser) >>> { rest in
       return always([a] + rest)
     }}
-}
-
-public func option<A>(parser: Parser<A>) -> Parser<A?> {
-  return Parser<A?> { state in
-    if let r = parser.parse(state) {
-      return Result(state: r.state, val: r.val)
-    } else {
-      return Result(state: state, val: nil)
-    }
-  }
 }
 
 public func charSet(cs: NSCharacterSet) -> Parser<Character> {

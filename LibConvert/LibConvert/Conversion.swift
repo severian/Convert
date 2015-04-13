@@ -23,7 +23,7 @@ public struct UnitConversion {
 
 public func conversionParser() -> Parser<UnitConversion> {
   let quantity = consumeTrailing(quantityParser(), many(whitespace()))
-  let preposition = option(choice(string("to"), string("in"), string("="))) >>> { _ in many(whitespace()) }
+  let preposition = maybe(choice(string("to"), string("in"), string("="))) >>> { _ in many(whitespace()) }
 
   return quantity >>> { from in
   return preposition >>> { _ in
