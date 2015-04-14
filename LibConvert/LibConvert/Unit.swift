@@ -25,6 +25,11 @@ public struct Quantity {
   public let unit: Unit
 }
 
+public struct QuantityPrefix {
+  public let value: Double
+  public let candidates: [Unit]
+}
+
 struct SiPrefix {
   let name: String
   let factor: Double
@@ -120,16 +125,28 @@ let unitTrie: Trie<Unit> = {
   return trie
 }()
 
+let quantityValueParser: Parser<Double> = consumeTrailing(choice(number(), always(1)), many(whitespace()))
+
 public func unitParser() -> Parser<Unit> {
   return consumeTrailing(matchTrie(unitTrie), maybe(char("s")))
 }
 
+public func unitPrefixParser() -> Parser<[Unit]> {
+  return consumeTrailing(findInTrie(unitTrie), maybe(char("s")))
+}
+
 public func quantityParser() -> Parser<Quantity> {
-  let quantity = choice(number(), always(1))
-  
-  return consumeTrailing(quantity, many(whitespace())) >>> { q in
+  return quantityValueParser >>> { q in
   return unitParser() >>> { u in
     return always(Quantity(value: q, unit: u))
   }}
 }
+
+public func quantityPrefixParser() -> Parser<QuantityPrefix> {
+  return quantityValueParser >>> { q in
+  return unitPrefixParser() >>> { u in
+    return always(QuantityPrefix(value: q, candidates: u))
+  }}
+}
+
 
