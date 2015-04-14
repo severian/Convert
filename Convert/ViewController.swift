@@ -9,10 +9,13 @@
 import UIKit
 import LibConvert
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITableViewDataSource {
   
-  private var inputField: UITextField?
-  private var conversionLabel: UILabel?
+  private var inputField: UITextField!
+  private var conversionLabel: UILabel!
+  
+  private var fromUnitTableView: UITableView!
+  private var quantityPrefix: QuantityPrefix?
   
   private var observerToken: NSObjectProtocol?
   
@@ -22,20 +25,25 @@ class ViewController: UIViewController {
     view.backgroundColor = UIColor.whiteColor()
     
     inputField = UITextField()
-    inputField!.backgroundColor = UIColor.lightGrayColor()
-    inputField!.addTarget(self, action: "inputChanged", forControlEvents: .EditingChanged)
+    inputField.backgroundColor = UIColor.lightGrayColor()
+    inputField.addTarget(self, action: "inputChanged", forControlEvents: .EditingChanged)
     
     conversionLabel = UILabel()
-    conversionLabel!.backgroundColor = UIColor.lightGrayColor()
+    conversionLabel.backgroundColor = UIColor.lightGrayColor()
     
-    view.addSubview(inputField!)
-    view.addSubview(conversionLabel!)
+    fromUnitTableView = UITableView(frame: CGRectZero, style: .Plain)
+    fromUnitTableView.dataSource = self
+    fromUnitTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "UnitCell")
+    
+    view.addSubview(inputField)
+    view.addSubview(conversionLabel)
+    view.addSubview(fromUnitTableView)
     
     updateFromAppState(AppStore.sharedInstance.state)
   }
   
   @objc private func inputChanged() {
-    AppStore.sharedInstance.queryChanged(inputField!.text)
+    AppStore.sharedInstance.queryChanged(inputField.text)
   }
   
   override func viewWillLayoutSubviews() {
@@ -48,6 +56,8 @@ class ViewController: UIViewController {
     
     rect = UIEdgeInsetsInsetRect(rect, UIEdgeInsets(top: 10, left: 0, bottom: 0, right: 0))
     
+    fromUnitTableView.frame = rect
+    
     var labelFrame = CGRectZero
     CGRectDivide(rect, &labelFrame, &rect, 40, .MinYEdge)
     conversionLabel!.frame = labelFrame
@@ -58,7 +68,7 @@ class ViewController: UIViewController {
   }
   
   override func viewDidAppear(animated: Bool) {
-    inputField!.becomeFirstResponder()
+    inputField.becomeFirstResponder()
   }
   
   override func viewWillDisappear(animated: Bool) {
@@ -77,10 +87,48 @@ class ViewController: UIViewController {
     }
   }
   
+  private func updateFromConversion(conversion: UnitConversion?) {
+    conversionLabel.text = textForConversion(conversion)
+    conversionLabel.hidden = conversion == nil
+  }
+  
+  private func updateFromQuantityPrefix(prefix: QuantityPrefix?) {
+    quantityPrefix = prefix
+    fromUnitTableView.reloadData()
+    fromUnitTableView.hidden = prefix == nil
+  }
+  
+  func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    if let prefix = quantityPrefix {
+      return count(prefix.candidates)
+    } else {
+      return 0
+    }
+  }
+  
+  func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    let cell = tableView.dequeueReusableCellWithIdentifier("UnitCell", forIndexPath: indexPath) as! UITableViewCell
+    cell.textLabel?.text = quantityPrefix!.candidates[indexPath.row].name
+    return cell
+  }
+  
   private func updateFromAppState(state: AppState) {
-    NSLog("update from app state")
-    inputField?.text = state.query
-    conversionLabel?.text = textForConversion(state.conversion)
+    inputField.text = state.query
+    
+    var conversion: UnitConversion?
+    var prefix: QuantityPrefix?
+    
+    if let parsed = state.parsed {
+      switch parsed {
+      case .Left(let l):
+        conversion = l.value
+      case .Right(let r):
+        prefix = r.value
+      }
+    }
+    
+    updateFromConversion(conversion)
+    updateFromQuantityPrefix(prefix)
   }
 
 }

@@ -15,7 +15,7 @@ private let _instance = AppStore()
 
 struct AppState {
   let query: String
-  let conversion: UnitConversion?
+  let parsed: Either<UnitConversion, QuantityPrefix>?
 }
 
 typealias AppStateObserver = AppState -> ()
@@ -26,12 +26,13 @@ class AppStore {
   private (set) var state: AppState
   
   init() {
-    state = AppState(query: "", conversion: nil)
+    state = AppState(query: "", parsed: nil)
   }
   
   func queryChanged(newQuery: String) {
-    let conversion = run(conversionParser(), newQuery)?.val
-    state = AppState(query: newQuery, conversion: conversion)
+    let parser = either(conversionParser(), quantityPrefixParser())
+    let parsed = run(parser, newQuery)?.val
+    state = AppState(query: newQuery, parsed: parsed)
     emitChange()
   }
   
