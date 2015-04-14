@@ -9,7 +9,7 @@
 import UIKit
 import LibConvert
 
-class ViewController: UIViewController, UITableViewDataSource {
+class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
   
   private var inputField: UITextField!
   private var conversionLabel: UILabel!
@@ -32,6 +32,7 @@ class ViewController: UIViewController, UITableViewDataSource {
     conversionLabel.backgroundColor = UIColor.lightGrayColor()
     
     fromUnitTableView = UITableView(frame: CGRectZero, style: .Plain)
+    fromUnitTableView.delegate = self
     fromUnitTableView.dataSource = self
     fromUnitTableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "UnitCell")
     
@@ -43,7 +44,7 @@ class ViewController: UIViewController, UITableViewDataSource {
   }
   
   @objc private func inputChanged() {
-    AppStore.sharedInstance.queryChanged(inputField.text)
+    AppStore.sharedInstance.updateQuery(inputField.text)
   }
   
   override func viewWillLayoutSubviews() {
@@ -110,6 +111,12 @@ class ViewController: UIViewController, UITableViewDataSource {
     let cell = tableView.dequeueReusableCellWithIdentifier("UnitCell", forIndexPath: indexPath) as! UITableViewCell
     cell.textLabel?.text = quantityPrefix!.candidates[indexPath.row].name
     return cell
+  }
+  
+  func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    let unit = quantityPrefix!.candidates[indexPath.row]
+    let query = "\(quantityPrefix!.value) \(unit.name)"
+    AppStore.sharedInstance.updateQuery(query)
   }
   
   private func updateFromAppState(state: AppState) {

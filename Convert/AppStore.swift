@@ -29,7 +29,7 @@ class AppStore {
     state = AppState(query: "", parsed: nil)
   }
   
-  func queryChanged(newQuery: String) {
+  func updateQuery(newQuery: String) {
     let parser = either(conversionParser(), quantityPrefixParser())
     let parsed = run(parser, newQuery)?.val
     state = AppState(query: newQuery, parsed: parsed)
