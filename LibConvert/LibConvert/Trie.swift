@@ -19,7 +19,7 @@ public class Trie<T> {
   
   public init() { }
   
-  func childForChar(c: Character) -> Trie? {
+  private func childForChar(c: Character) -> Trie? {
     for child in children {
       if c == child.edge {
         return child.node
@@ -28,7 +28,7 @@ public class Trie<T> {
     return nil
   }
   
-  public func get(key: String) -> (String, T)? {
+  private func getNode(key: String) -> (String.Index, Trie) {
     var node = self
     var i = key.startIndex
     
@@ -41,8 +41,33 @@ public class Trie<T> {
       }
     }
     
+    return (i, node)
+  }
+  
+  public func get(key: String) -> (String, T)? {
+    let (consumed, node) = getNode(key)
+    
     return node.value.map { v in
-      return (key[key.startIndex..<i], v)
+      return (key[consumed..<key.endIndex], v)
+    }
+  }
+  
+  public func find(prefix: String) -> (String, [T]) {
+    let (consumed, node) = getNode(prefix)
+    
+    if consumed > prefix.startIndex {
+      var values = [T]()
+      var nodeStack = [node]
+      while count(nodeStack) > 0 {
+        let currentNode = nodeStack.removeLast()
+        if let v = currentNode.value {
+          values.append(v)
+        }
+        nodeStack.extend(currentNode.children.map({ edge in return edge.node }))
+      }
+      return (prefix[consumed..<prefix.endIndex], values)
+    } else {
+      return ("", [T]())
     }
   }
   
@@ -80,3 +105,14 @@ public func matchTrie<A>(trie: Trie<A>) -> Parser<A> {
   }
 }
 
+public func findInTrie<A>(trie: Trie<A>) -> Parser<[A]> {
+  return Parser<[A]> { state in
+    let (matched, vals) = trie.find(state.unconsumed())
+    
+    if count(vals) > 0 {
+      return Result(state: state.advanceBy(count(matched)), val: vals)
+    } else {
+      return nil
+    }
+  }
+}
