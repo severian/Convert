@@ -48,7 +48,7 @@ public class Trie<T> {
     let (consumed, node) = getNode(key)
     
     return node.value.map { v in
-      return (key[consumed..<key.endIndex], v)
+      return (key[key.startIndex..<consumed], v)
     }
   }
   
@@ -65,7 +65,7 @@ public class Trie<T> {
         }
         nodeStack.extend(currentNode.children.map({ edge in return edge.node }))
       }
-      return (prefix[consumed..<prefix.endIndex], values)
+      return (prefix[prefix.startIndex..<consumed], values)
     } else {
       return ("", [T]())
     }
