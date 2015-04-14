@@ -32,6 +32,14 @@ public struct InputState {
     return input[pos..<other.pos]
   }
   
+  func unconsumed() -> String {
+    if !empty() {
+      return input[pos..<input.endIndex]
+    } else {
+      return ""
+    }
+  }
+  
   func startsWith(str: String) -> Bool {
     if let r = input.rangeOfString(str, options: .allZeros, range: nil, locale: nil) {
       return r.startIndex == pos

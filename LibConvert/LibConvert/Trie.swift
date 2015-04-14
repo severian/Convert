@@ -28,27 +28,22 @@ public class Trie<T> {
     return nil
   }
   
-  public func get(state: InputState) -> (T, InputState)? {
+  public func get(key: String) -> (String, T)? {
     var node = self
-    var s = state
-    while let c = s.first() {
-      if let child = node.childForChar(c) {
+    var i = key.startIndex
+    
+    while i < key.endIndex {
+      if let child = node.childForChar(key[i]) {
         node = child
-        s = s.advanceBy(1)
+        i = advance(i, 1)
       } else {
         break
       }
     }
     
-    if let v = node.value {
-      return (v, s)
-    } else {
-      return nil
+    return node.value.map { v in
+      return (key[key.startIndex..<i], v)
     }
-  }
-  
-  public func get(val: String) -> T? {
-    return get(InputState(input: val, pos: val.startIndex)).map { $0.0 }
   }
   
   public func put(key: String, val: T) {
@@ -77,8 +72,8 @@ public class Trie<T> {
 
 public func matchTrie<A>(trie: Trie<A>) -> Parser<A> {
   return Parser<A> { state in
-    if let (val, matchedState) = trie.get(state) {
-      return Result(state: matchedState, val: val)
+    if let (matched, val) = trie.get(state.unconsumed()) {
+      return Result(state: state.advanceBy(count(matched)), val: val)
     } else {
       return nil
     }
