@@ -136,15 +136,15 @@ public func unitPrefixParser() -> Parser<[Unit]> {
 }
 
 public func quantityParser() -> Parser<Quantity> {
-  return quantityValueParser >>> { q in
-  return unitParser() >>> { u in
+  return quantityValueParser >>= { q in
+  return unitParser() >>= { u in
     return always(Quantity(value: q, unit: u))
   }}
 }
 
 public func quantityPrefixParser() -> Parser<QuantityPrefix> {
-  return quantityValueParser >>> { q in
-  return unitPrefixParser() >>> { u in
+  return quantityValueParser >>= { q in
+  return unitPrefixParser() >>= { u in
     return always(QuantityPrefix(value: q, candidates: u))
   }}
 }

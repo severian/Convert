@@ -32,17 +32,9 @@ public struct Parser<A> {
   }
 }
 
-infix operator >>> { associativity left }
-public func >>><A,B>(parser: Parser<A>, f: A -> Parser<B>) -> Parser<B> {
+infix operator >>= { associativity left }
+public func >>=<A,B>(parser: Parser<A>, f: A -> Parser<B>) -> Parser<B> {
   return parser.flatMap(f)
-}
-
-infix operator >>! { associativity left }
-public func >>!<A,B>(parser: Parser<A>, ignore: Parser<B>) -> Parser<A> {
-  return parser >>> { val in
-  return ignore >>> { _ in
-    return always(val)
-  }}
 }
 
 public func run<A>(parser: Parser<A>, input: String) -> Result<A>? {
@@ -126,8 +118,8 @@ public func many<A>(parser: Parser<A>) -> Parser<[A]> {
 }
 
 public func many1<A>(parser: Parser<A>) -> Parser<[A]> {
-  return parser >>> { a in
-    return many(parser) >>> { rest in
+  return parser >>= { a in
+    return many(parser) >>= { rest in
       return always([a] + rest)
     }}
 }
@@ -144,7 +136,7 @@ public func letter() -> Parser<Character> {
 }
 
 public func word() -> Parser<String> {
-  return many1(letter()) >>> { letters in
+  return many1(letter()) >>= { letters in
     return always(String(letters))
   }
 }
@@ -158,14 +150,14 @@ public func digit() -> Parser<Character> {
 }
 
 public func positiveInteger() -> Parser<Int> {
-  return many1(digit()) >>> { digits in
+  return many1(digit()) >>= { digits in
     return always(String(digits).toInt()!)
   }
 }
 
 public func negativeInteger() -> Parser<Int> {
-  return char("-") >>> { _ in
-    return positiveInteger() >>> { i in
+  return char("-") >>= { _ in
+    return positiveInteger() >>= { i in
       return always(i * -1)
     }}
 }
@@ -175,9 +167,9 @@ public func integer() -> Parser<Int> {
 }
 
 public func fraction() -> Parser<Double> {
-  return integer() >>> { numerator in
-  return char("/") >>> { _ in
-  return integer() >>> { denominator in
+  return integer() >>= { numerator in
+  return char("/") >>= { _ in
+  return integer() >>= { denominator in
     if (denominator != 0) {
       return always(Double(numerator) / Double(denominator))
     } else {
@@ -188,13 +180,13 @@ public func fraction() -> Parser<Double> {
 
 public func decimal() -> Parser<Double> {
   let dec: Parser<Double> =
-  choice(integer(), always(0)) >>> { intDigits in
-  return char(".") >>> { _ in
-  return positiveInteger() >>> { decDigits in
+  choice(integer(), always(0)) >>= { intDigits in
+  return char(".") >>= { _ in
+  return positiveInteger() >>= { decDigits in
     return always(("\(intDigits).\(decDigits)" as NSString).doubleValue)
   }}}
   
-  return choice(dec, integer() >>> { n in return always(Double(n)) })
+  return choice(dec, integer() >>= { n in return always(Double(n)) })
 }
 
 public func number() -> Parser<Double> {
@@ -202,8 +194,8 @@ public func number() -> Parser<Double> {
 }
 
 public func consumeTrailing<A,B>(parser: Parser<A>, consume: Parser<B>) -> Parser<A> {
-  return parser >>> { a in
-  return consume >>> { _ in
+  return parser >>= { a in
+  return consume >>= { _ in
     return always(a)
   }}
 }
