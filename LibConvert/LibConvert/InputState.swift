@@ -48,3 +48,9 @@ public struct InputState {
     }
   }
 }
+
+public struct ParsedInfo<T> {
+  public let val: T
+  public let source: String
+  public let pos: String.Index
+}

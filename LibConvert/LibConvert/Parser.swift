@@ -20,7 +20,7 @@ public struct Parser<A> {
     return parser(state)
   }
   
-  func flatMap<B>(f: A -> Parser<B>) -> Parser<B> {
+  public func flatMap<B>(f: A -> Parser<B>) -> Parser<B> {
     let parser = self.parser
     return Parser<B> { input in
       if let r = parser(input) {
@@ -200,10 +200,11 @@ public func consumeTrailing<A,B>(parser: Parser<A>, consume: Parser<B>) -> Parse
   }}
 }
 
-public func reportConsumed<A>(parser: Parser<A>) -> Parser<(A, String)> {
-  return Parser<(A, String)> { state in
+public func parsedInfo<A>(parser: Parser<A>) -> Parser<ParsedInfo<A>> {
+  return Parser<ParsedInfo<A>> { state in
     if let r = parser.parse(state) {
-      return Result(state: r.state, val: (r.val, state.consumedFrom(r.state)))
+      let info = ParsedInfo(val: r.val, source: state.consumedFrom(r.state), pos: state.pos)
+      return Result(state: r.state, val: info)
     } else {
       return nil
     }

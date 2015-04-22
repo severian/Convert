@@ -26,7 +26,14 @@ if let c = run(conversionParser(), "kilograms to")?.val {
   "\(c.from.value) \(c.from.unit.name) = \(c.convert()) \(c.to.name)"
 }
 
-if let (val, consumed) = run(reportConsumed(number()), "5/10 miles")?.val {
-  val
-  consumed
+let parser2: Parser<ParsedInfo<Double>> =
+word().flatMap { _ in
+  return many1(whitespace()).flatMap { _ in
+    return parsedInfo(number())
+  }}
+
+if let info = run(parser2, "miles 5/10")?.val {
+  info.val
+  info.source
+  info.pos
 }
