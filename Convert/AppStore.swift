@@ -36,6 +36,22 @@ class AppStore {
     emitChange()
   }
   
+  func updateFromUnit(unit: Unit) {
+    if let p = state.parsed {
+      switch p {
+      case .Right(let quantity):
+        let start = quantity.value.candidates.pos
+        let end = advance(start, count(quantity.value.candidates.source))
+        var query = state.query
+        query.replaceRange(start..<end, with: unit.name)
+        
+        updateQuery(query)
+      default:
+        break
+      }
+    }
+  }
+  
   func addObserver(observer: AppStateObserver) -> NSObjectProtocol {
     return NSNotificationCenter.defaultCenter().addObserverForName(
       storeChangedNotification,

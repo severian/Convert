@@ -13,11 +13,11 @@ public struct UnitConversion {
   public let to: Unit
   
   public func convert() -> Double {
-    return (from.unit.factor / to.factor) * from.value
+    return (from.unit.val.factor / to.factor) * from.value.val
   }
   
   public func isValid() -> Bool {
-    return from.unit.unitType == to.unitType
+    return from.unit.val.unitType == to.unitType
   }
 }
 

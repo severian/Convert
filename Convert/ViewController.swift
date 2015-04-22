@@ -79,7 +79,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
   private func textForConversion(conversion: UnitConversion?) -> String {
     if let c = conversion {
       if c.isValid() {
-        return "\(c.from.value) \(c.from.unit.name) = \(c.convert()) \(c.to.name)"
+        return "\(c.from.value.val) \(c.from.unit.val.name) = \(c.convert()) \(c.to.name)"
       } else {
         return "INVALID!"
       }
@@ -101,7 +101,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     if let prefix = quantityPrefix {
-      return count(prefix.candidates)
+      return count(prefix.candidates.val)
     } else {
       return 0
     }
@@ -109,14 +109,13 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCellWithIdentifier("UnitCell", forIndexPath: indexPath) as! UITableViewCell
-    cell.textLabel?.text = quantityPrefix!.candidates[indexPath.row].name
+    cell.textLabel?.text = quantityPrefix!.candidates.val[indexPath.row].name
     return cell
   }
   
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-    let unit = quantityPrefix!.candidates[indexPath.row]
-    let query = "\(quantityPrefix!.value) \(unit.name)"
-    AppStore.sharedInstance.updateQuery(query)
+    let unit = quantityPrefix!.candidates.val[indexPath.row]
+    AppStore.sharedInstance.updateFromUnit(unit)
   }
   
   private func updateFromAppState(state: AppState) {

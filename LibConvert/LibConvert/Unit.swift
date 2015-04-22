@@ -21,13 +21,13 @@ public struct Unit {
 }
 
 public struct Quantity {
-  public let value: Double
-  public let unit: Unit
+  public let value: ParsedInfo<Double>
+  public let unit: ParsedInfo<Unit>
 }
 
 public struct QuantityPrefix {
-  public let value: Double
-  public let candidates: [Unit]
+  public let value: ParsedInfo<Double>
+  public let candidates: ParsedInfo<[Unit]>
 }
 
 struct SiPrefix {
@@ -136,15 +136,15 @@ public func unitPrefixParser() -> Parser<[Unit]> {
 }
 
 public func quantityParser() -> Parser<Quantity> {
-  return quantityValueParser >>= { q in
-  return unitParser() >>= { u in
+  return parsedInfo(quantityValueParser) >>= { q in
+  return parsedInfo(unitParser()) >>= { u in
     return always(Quantity(value: q, unit: u))
   }}
 }
 
 public func quantityPrefixParser() -> Parser<QuantityPrefix> {
-  return quantityValueParser >>= { q in
-  return unitPrefixParser() >>= { u in
+  return parsedInfo(quantityValueParser) >>= { q in
+  return parsedInfo(unitPrefixParser()) >>= { u in
     return always(QuantityPrefix(value: q, candidates: u))
   }}
 }
