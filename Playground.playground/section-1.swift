@@ -25,3 +25,8 @@ if let val = run(parser, "10 mi")?.val {
 if let c = run(conversionParser(), "kilograms to")?.val {
   "\(c.from.value) \(c.from.unit.name) = \(c.convert()) \(c.to.name)"
 }
+
+if let (val, consumed) = run(reportConsumed(number()), "5/10 miles")?.val {
+  val
+  consumed
+}

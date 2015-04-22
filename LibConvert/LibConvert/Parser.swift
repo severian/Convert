@@ -200,3 +200,13 @@ public func consumeTrailing<A,B>(parser: Parser<A>, consume: Parser<B>) -> Parse
   }}
 }
 
+public func reportConsumed<A>(parser: Parser<A>) -> Parser<(A, String)> {
+  return Parser<(A, String)> { state in
+    if let r = parser.parse(state) {
+      return Result(state: r.state, val: (r.val, state.consumedFrom(r.state)))
+    } else {
+      return nil
+    }
+  }
+}
+
