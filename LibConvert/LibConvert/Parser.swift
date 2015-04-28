@@ -149,55 +149,15 @@ public func digit() -> Parser<Character> {
   return charSet(NSCharacterSet.decimalDigitCharacterSet())
 }
 
-public func positiveInteger() -> Parser<Int> {
-  return many1(digit()) >>= { digits in
-    return always(String(digits).toInt()!)
-  }
-}
-
-public func negativeInteger() -> Parser<Int> {
-  return char("-") >>= { _ in
-    return positiveInteger() >>= { i in
-      return always(i * -1)
-    }}
-}
-
-public func integer() -> Parser<Int> {
-  return choice(positiveInteger(), negativeInteger())
-}
-
-public func fraction() -> Parser<Double> {
-  return integer() >>= { numerator in
-  return char("/") >>= { _ in
-  return integer() >>= { denominator in
-    if (denominator != 0) {
-      return always(Double(numerator) / Double(denominator))
-    } else {
-      return never()
-    }
-  }}}
-}
-
-public func decimal() -> Parser<Double> {
-  let dec: Parser<Double> =
-  choice(integer(), always(0)) >>= { intDigits in
-  return char(".") >>= { _ in
-  return positiveInteger() >>= { decDigits in
-    return always(("\(intDigits).\(decDigits)" as NSString).doubleValue)
-  }}}
-  
-  return choice(dec, integer() >>= { n in return always(Double(n)) })
-}
-
-public func number() -> Parser<Double> {
-  return choice(fraction(), decimal())
-}
-
 public func consumeTrailing<A,B>(parser: Parser<A>, consume: Parser<B>) -> Parser<A> {
   return parser >>= { a in
   return consume >>= { _ in
     return always(a)
   }}
+}
+
+public func consumeTrailingWhitespace<A>(parser: Parser<A>) -> Parser<A> {
+  return consumeTrailing(parser, many(whitespace()))
 }
 
 public func parsedInfo<A>(parser: Parser<A>) -> Parser<ParsedInfo<A>> {

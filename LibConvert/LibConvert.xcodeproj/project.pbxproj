@@ -13,6 +13,7 @@
 		1A01A1141AD517E9001DDE00 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A01A1111AD517E9001DDE00 /* Parser.swift */; };
 		1A01A1151AD517E9001DDE00 /* Trie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A01A1121AD517E9001DDE00 /* Trie.swift */; };
 		1A01A1161AD517E9001DDE00 /* InputState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A01A1131AD517E9001DDE00 /* InputState.swift */; };
+		1A0D130B1AEF5AE600D1BCEB /* Numbers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0D130A1AEF5AE600D1BCEB /* Numbers.swift */; };
 		1A418C681ADCEAD700C07D5C /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A418C671ADCEAD700C07D5C /* Either.swift */; };
 		1A7EC7C41ADA2E920008C1CB /* Unit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A7EC7C31ADA2E920008C1CB /* Unit.swift */; };
 		1A7EC7C61ADA36790008C1CB /* Conversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A7EC7C51ADA36790008C1CB /* Conversion.swift */; };
@@ -38,6 +39,7 @@
 		1A01A1111AD517E9001DDE00 /* Parser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
 		1A01A1121AD517E9001DDE00 /* Trie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Trie.swift; sourceTree = "<group>"; };
 		1A01A1131AD517E9001DDE00 /* InputState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputState.swift; sourceTree = "<group>"; };
+		1A0D130A1AEF5AE600D1BCEB /* Numbers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Numbers.swift; sourceTree = "<group>"; };
 		1A418C671ADCEAD700C07D5C /* Either.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Either.swift; sourceTree = "<group>"; };
 		1A7EC7C31ADA2E920008C1CB /* Unit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Unit.swift; sourceTree = "<group>"; };
 		1A7EC7C51ADA36790008C1CB /* Conversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Conversion.swift; sourceTree = "<group>"; };
@@ -85,6 +87,7 @@
 			children = (
 				1A01A0FA1AD517D7001DDE00 /* LibConvert.h */,
 				1A01A1111AD517E9001DDE00 /* Parser.swift */,
+				1A0D130A1AEF5AE600D1BCEB /* Numbers.swift */,
 				1A01A1121AD517E9001DDE00 /* Trie.swift */,
 				1A01A1131AD517E9001DDE00 /* InputState.swift */,
 				1A7EC7C31ADA2E920008C1CB /* Unit.swift */,
@@ -229,6 +232,7 @@
 			files = (
 				1A01A1141AD517E9001DDE00 /* Parser.swift in Sources */,
 				1A7EC7C61ADA36790008C1CB /* Conversion.swift in Sources */,
+				1A0D130B1AEF5AE600D1BCEB /* Numbers.swift in Sources */,
 				1A7EC7C41ADA2E920008C1CB /* Unit.swift in Sources */,
 				1A01A1161AD517E9001DDE00 /* InputState.swift in Sources */,
 				1A418C681ADCEAD700C07D5C /* Either.swift in Sources */,
