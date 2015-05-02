@@ -8,22 +8,45 @@
 
 import Foundation
 
-public struct Result<A> {
-  public let state: InputState
-  public let val: A
-}
 
 public struct Parser<A> {
+  let name: String?
   let parser: InputState -> Result<A>?
   
+  public init(name: String, parser: InputState -> Result<A>?) {
+    self.name = name
+    self.parser = parser
+  }
+  
+  public init(parser: InputState -> Result<A>?) {
+    self.name = nil
+    self.parser = parser
+  }
+  
   func parse(state: InputState) -> Result<A>? {
+    if let n = name {
+      let key = state.memoKey(n)
+      if let result = state.memotable.table[key] {
+        return (result as? Result<A>)
+      } else {
+        let count = state.ctable.table[key] ?? 0
+        if count > state.unconsumedCount() + 1 {
+          return nil;
+        } else {
+          state.ctable.table[key] = count + 1
+          let result = parser(state)
+          state.memotable.table[key] = result as Any
+          return result
+        }
+      }
+    }
+    
     return parser(state)
   }
   
   public func flatMap<B>(f: A -> Parser<B>) -> Parser<B> {
-    let parser = self.parser
     return Parser<B> { input in
-      if let r = parser(input) {
+      if let r = self.parse(input) {
         return f(r.val).parse(r.state)
       } else {
         return nil
@@ -38,7 +61,7 @@ public func >>=<A,B>(parser: Parser<A>, f: A -> Parser<B>) -> Parser<B> {
 }
 
 public func run<A>(parser: Parser<A>, input: String) -> Result<A>? {
-  return parser.parse(InputState(input: input, pos: input.startIndex))
+  return parser.parse(InputState(input: input))
 }
 
 public func always<A>(val: A) -> Parser<A> {
@@ -51,6 +74,10 @@ public func never<A>() -> Parser<A> {
   return Parser<A>() { state in
     return nil
   }
+}
+
+public func memoize<A>(name: String, parser: Parser<A>) -> Parser<A> {
+  return Parser<A>(name: name, parser: parser.parser)
 }
 
 public func maybe<A>(parser: Parser<A>) -> Parser<A?> {
@@ -119,9 +146,15 @@ public func many<A>(parser: Parser<A>) -> Parser<[A]> {
 
 public func many1<A>(parser: Parser<A>) -> Parser<[A]> {
   return parser >>= { a in
-    return many(parser) >>= { rest in
-      return always([a] + rest)
-    }}
+  return many(parser) >>= { rest in
+    return always([a] + rest)
+  }}
+}
+
+public func lazy<A>(f: () -> Parser<A>) -> Parser<A> {
+  return Parser<A> { state in
+    return f().parse(state)
+  }
 }
 
 public func charSet(cs: NSCharacterSet) -> Parser<Character> {

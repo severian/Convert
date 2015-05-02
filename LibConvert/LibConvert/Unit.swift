@@ -125,7 +125,7 @@ let unitTrie: Trie<Unit> = {
   return trie
 }()
 
-let quantityValueParser: Parser<Double> = consumeTrailing(choice(number(), always(1)), many(whitespace()))
+let quantityValueParser: Parser<Double> = consumeTrailingWhitespace(choice(equation(), always(1)))
 
 public func unitParser() -> Parser<Unit> {
   return consumeTrailing(matchTrie(unitTrie), maybe(char("s")))

@@ -3,37 +3,6 @@
 import Foundation
 import LibConvert
 
-let parser = either(conversionParser(), quantityPrefixParser())
+let parser = equation()
 
-if let val = run(parser, "10 mi")?.val {
-  switch (val) {
-  case .Left(let l):
-    let c = l.value
-    if c.isValid() {
-      "\(c.from.value) \(c.from.unit.name) = \(c.convert()) \(c.to.name)"
-    } else {
-      "INVALID!"
-    }
-  case .Right(let r):
-    let c = r.value
-    let candidates = ", ".join(c.candidates.map { can in return can.name })
-    "\(c.value) \(candidates)"
-  }
-  
-}
-
-if let c = run(conversionParser(), "kilograms to")?.val {
-  "\(c.from.value) \(c.from.unit.name) = \(c.convert()) \(c.to.name)"
-}
-
-let parser2: Parser<ParsedInfo<Double>> =
-word().flatMap { _ in
-  return many1(whitespace()).flatMap { _ in
-    return parsedInfo(number())
-  }}
-
-if let info = run(parser2, "miles 5/10")?.val {
-  info.val
-  info.source
-  info.pos
-}
+run(parser, "1 * 3")?.val

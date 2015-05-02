@@ -109,3 +109,26 @@ public func number() -> Parser<Double> {
   return choice(wordNumber(), numericNumber())
 }
 
+public func numericOperator() -> Parser<(Double, Double) -> Double> {
+  return choice(
+    char("*") >>= { _ in return always(*) },
+    char("/") >>= { _ in return always(/) },
+    char("-") >>= { _ in return always(-) },
+    char("+") >>= { _ in return always(+) }
+  )
+}
+
+public func binaryEquation() -> Parser<Double> {
+  let parser = consumeTrailingWhitespace(lazy(equation)) >>= { lhs in
+  return consumeTrailingWhitespace(numericOperator()) >>= { op in
+  return consumeTrailingWhitespace(equation()) >>= { rhs in
+    return always(op(lhs, rhs))
+  }}}
+  
+  return memoize("binaryEquation", parser)
+}
+
+public func equation() -> Parser<Double> {
+  return choice(lazy(binaryEquation), number())
+}
+
